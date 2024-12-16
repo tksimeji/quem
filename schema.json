@@ -101,5 +101,6 @@
                 "type": "string"
             }
         }
-    }
+    },
+    "required": ["title", "lore", "icon", "category", "requirement", "location"]
 }
