@@ -1,0 +1,105 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "title": {
+            "type": "string"
+        },
+        "lore": {
+            "type": "array"
+        },
+        "icon": {
+            "oneOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "type": "string"
+                        },
+                        "model": {
+                            "type": "integer"
+                        },
+                        "aura": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": ["type"],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "category": {
+            "type": "string",
+            "enum": ["daily", "event", "general", "story"]
+        },
+        "requirement": {
+            "type": "integer"
+        },
+        "play_limit": {
+            "type": "integer"
+        },
+        "player_limit": {
+            "type": "integer"
+        },
+        "location": {
+            "type": "object",
+            "properties": {
+                "world": {
+                    "type": "string"
+                },
+                "x": {
+                    "type": "number"
+                },
+                "y": {
+                    "type": "number"
+                },
+                "z": {
+                    "type": "number"
+                },
+                "yaw": {
+                    "type": "number"
+                },
+                "pitch": {
+                    "type": "number"
+                }
+            },
+            "required": ["world", "x", "y", "z"]
+        },
+        "points": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "world": {
+                        "type": "string"
+                    },
+                    "x": {
+                        "type": "number"
+                    },
+                    "y": {
+                        "type": "number"
+                    },
+                    "z": {
+                        "type": "number"
+                    },
+                    "yaw": {
+                        "type": "number"
+                    },
+                    "pitch": {
+                        "type": "number"
+                    }
+                },
+                "required": ["world", "x", "y", "z"]
+            }
+        },
+        "scripts": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        }
+    }
+}
