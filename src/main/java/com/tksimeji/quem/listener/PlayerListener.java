@@ -13,17 +13,17 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public final class PlayerListener implements Listener {
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
+    public void onPlayerJoin(@NotNull PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
         ItemStack gameMenuStack = new ItemStack(Material.COMPASS);
@@ -35,20 +35,18 @@ public final class PlayerListener implements Listener {
         ItemStack partyStack = new ItemStack(Material.CHEST_MINECART);
         ItemMeta partyMeta = partyStack.getItemMeta();
         partyMeta.displayName(Component.text("Party").color(NamedTextColor.GREEN).decoration(TextDecoration.ITALIC, false).append(Component.text(" (右クリック)").color(NamedTextColor.GRAY)));
-        partyMeta.lore(List.of(Component.text("Partyを作成してフレンドと一緒にプレイしよう").color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false)));
         partyStack.setItemMeta(partyMeta);
         player.getInventory().setItem(7, partyStack);
 
         ItemStack questStack = new ItemStack(Material.ENCHANTED_BOOK);
         ItemMeta questMeta = questStack.getItemMeta();
         questMeta.displayName(Component.text("Quest").color(NamedTextColor.GREEN).decoration(TextDecoration.ITALIC, false).append(Component.text(" (右クリック)").color(NamedTextColor.GRAY)));
-        questMeta.lore(List.of(Component.text("挑戦可能なクエストの一覧を表示します").color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false)));
         questStack.setItemMeta(questMeta);
         player.getInventory().setItem(8, questStack);
     }
 
     @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
+    public void onPlayerQuit(@NotNull PlayerQuitEvent event) {
         Player player = event.getPlayer();
         Party party = Party.getInstance(player);
 
@@ -58,7 +56,19 @@ public final class PlayerListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerInteract(PlayerInteractEvent event) {
+    public void onPlayerDeath(@NotNull PlayerDeathEvent event) {
+        Player player = event.getPlayer();
+        Quest quest = Quest.getInstance(event.getPlayer());
+
+        if (quest == null) {
+            return;
+        }
+
+        quest.getParty().removeMember(player);
+    }
+
+    @EventHandler
+    public void onPlayerInteract(@NotNull PlayerInteractEvent event) {
         Player player = event.getPlayer();
         int slot = player.getInventory().getHeldItemSlot();
 
