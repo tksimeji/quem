@@ -92,5 +92,9 @@
   "message.quest.permission_error": "You must be the party leader to start the quest.",
   "message.quest.player_limit_over": "This quest can only be attempted by up to ${limit} players.",
 
-  "message.request.already": "You have already sent a request."
+  "message.request.already": "You have already sent a request.",
+
+  "button.game_menu": "&aGame Menu &7(Right Click)",
+  "button.party": "&aParty &7(Right Click)",
+  "button.quest": "&aQuest &7(Right Click)"
 }

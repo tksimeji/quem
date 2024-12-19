@@ -56,6 +56,8 @@ public final class QuestType implements IQuestType {
     private final int playLimit;
     private final int playerLimit;
 
+    private boolean valid = true;
+
     private final @NotNull File file;
 
     public QuestType(@NotNull File f) throws QuestSyntaxException {
@@ -191,6 +193,10 @@ public final class QuestType implements IQuestType {
         return playerLimit;
     }
 
+    public boolean isValid() {
+        return valid;
+    }
+
     public boolean isGranted(@Nullable Player player) {
         if (player == null) {
             return false;
@@ -221,6 +227,14 @@ public final class QuestType implements IQuestType {
         }
 
         return ! hasPlayLimit() || playLimit >= count;
+    }
+
+    public void enable() {
+        valid = true;
+    }
+
+    public void disable() {
+        valid = false;
     }
 
     public void grant(@NotNull Player player) {

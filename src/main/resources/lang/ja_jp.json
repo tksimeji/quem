@@ -92,5 +92,9 @@
   "message.quest.permission_error": "クエストを開始するにはパーティーリーダーである必要があります",
   "message.quest.player_limit_over": "このクエストは、${limit}人以内でのみ挑戦可能です",
 
-  "message.request.already": "既にリクエストを送信しています"
+  "message.request.already": "既にリクエストを送信しています",
+
+  "button.game_menu": "&aゲームメニュー &7(右クリック)",
+  "button.party": "&aパーティー &7(右クリック)",
+  "button.quest": "&aクエスト &7(右クリック)"
 }

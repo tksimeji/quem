@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "net.azisaba"
-version = "0.0.0"
+version = "0.1.0"
 
 repositories {
     mavenCentral()
@@ -20,7 +20,7 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
-    compileOnly("com.tksimeji:visualkit:0.3.3")
+    compileOnly("com.tksimeji:visualkit:0.3.8")
 
     implementation(kotlin("stdlib-jdk8"))
 }

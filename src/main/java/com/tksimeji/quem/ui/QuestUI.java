@@ -187,6 +187,11 @@ public final class QuestUI extends ChestUI {
             public void run() {
                 new Quest(type, Optional.ofNullable(party).orElse(new Party(player)));
             }
-        }, null);
+        }, new BukkitRunnable() {
+            @Override
+            public void run() {
+                new QuestUI(player);
+            }
+        });
     }
 }

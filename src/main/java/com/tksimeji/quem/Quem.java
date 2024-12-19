@@ -2,8 +2,10 @@ package com.tksimeji.quem;
 
 import com.tksimeji.quem.command.AcceptCommand;
 import com.tksimeji.quem.command.QuemCommand;
+import com.tksimeji.quem.listener.InventoryListener;
 import com.tksimeji.quem.listener.PlayerListener;
 import com.tksimeji.quem.listener.ServerListener;
+import com.tksimeji.quem.schedule.DailyShuffleRunnable;
 import com.tksimeji.quem.ui.CLI;
 import com.tksimeji.quem.util.FileUtility;
 import net.kyori.adventure.text.Component;
@@ -23,7 +25,7 @@ import java.text.SimpleDateFormat;
 public final class Quem extends JavaPlugin {
     private static Quem instance;
 
-    public static final @NotNull String extension = "quem";
+    public static final @NotNull String extension = "json";
 
     public static final @NotNull SimpleDateFormat sdf1 = new SimpleDateFormat("MM/dd/yy");
 
@@ -49,12 +51,15 @@ public final class Quem extends JavaPlugin {
     public void onEnable() {
         Quem.instance = this;
 
+        Bukkit.getPluginManager().registerEvents(new InventoryListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
         Bukkit.getPluginManager().registerEvents(new ServerListener(), this);
 
         Bukkit.getCommandMap().register("accept", "quem-commands", new AcceptCommand());
 
         getCommand("quem").setExecutor(new QuemCommand());
+
+        new DailyShuffleRunnable();
 
         logger().info(Component.text(" _____       ").color(TextColor.color(69, 104, 219)));
         logger().info(Component.text("|     |_____ ").color(TextColor.color(96, 105, 210)).append(Component.text("    Quem - " + version()).color(NamedTextColor.WHITE)));
