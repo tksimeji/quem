@@ -36,6 +36,8 @@ Quests are loaded by placing a json format definition file in `/plugins/quem`.
 
 ## Syntax
 
+Here we use "//" to annotate, which cannot be used in real json.
+
 ```json
 {
   "title": "&aZombie Hunter",
