@@ -21,7 +21,8 @@ public final class FileUtility {
         for (File file : files) {
             if (file.isDirectory()) {
                 set.addAll(getFiles(file));
-            } else if (file.getName().endsWith("." + Quem.extension)) {
+            } else if (Quem.JSON_EXTENSIONS.stream().anyMatch(e -> file.getName().endsWith(e)) ||
+                    Quem.YAML_EXTENSIONS.stream().anyMatch(e -> file.getName().endsWith(e))) {
                 set.add(file);
             }
         }

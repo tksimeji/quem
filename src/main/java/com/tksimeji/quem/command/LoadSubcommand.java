@@ -24,7 +24,7 @@ public final class LoadSubcommand implements Subcommand {
     public @NotNull List<String> suggest(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         return FileUtility.getFiles(Quem.directory()).stream()
                 .filter(file -> QuestType.getInstances().stream().noneMatch(type -> type.getFile().equals(file)))
-                .map(File::getName)
+                .map(file -> Quem.directory().toPath().relativize(file.toPath()).toString())
                 .toList();
     }
 

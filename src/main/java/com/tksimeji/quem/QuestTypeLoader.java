@@ -8,18 +8,30 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 
 public final class QuestTypeLoader {
-    public static void load(@NotNull File file) throws QuestSyntaxException {
+    public static void load(@NotNull File file) {
         if (! file.exists() || ! file.isFile()) {
             throw new IllegalArgumentException(file.getName() + " is an invalid file.");
         }
 
-        JsonElement json = ResourceUtility.getJsonResource(Quem.directory().toURI().relativize(file.toURI()).getPath());
+        if (Quem.JSON_EXTENSIONS.stream().anyMatch(e -> file.getName().endsWith(e))) {
+            loadJsonFile(file);
+        } else if (Quem.YAML_EXTENSIONS.stream().anyMatch(e -> file.getName().endsWith(e))) {
+            loadYamlFile(file);
+        }
+    }
+
+    private static void loadJsonFile(@NotNull File file) {
+        JsonElement json = ResourceUtility.getJsonResource(file);
 
         if (! (json instanceof JsonObject)) {
             throw new QuestSyntaxException("The root element must be a json object.");
         }
 
-        new QuestType(file);
+        new JsonQuestType(file);
+    }
+
+    private static void loadYamlFile(@NotNull File file) {
+        new YamlQuestType(file);
     }
 
     public static void unload(@NotNull QuestType type) {
@@ -27,7 +39,7 @@ public final class QuestTypeLoader {
         QuestType.instances.remove(type);
     }
 
-    public static void reload(@NotNull QuestType type) throws QuestSyntaxException {
+    public static void reload(@NotNull QuestType type) {
         unload(type);
         load(type.getFile());
     }

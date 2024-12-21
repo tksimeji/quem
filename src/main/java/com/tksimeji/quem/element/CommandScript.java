@@ -10,6 +10,7 @@ import com.tksimeji.quem.util.StringUtility;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -25,7 +26,7 @@ public final class CommandScript {
 
     private final List<String> source;
 
-    public CommandScript(@NotNull String name, @NotNull JsonElement source) {
+    public CommandScript(@NotNull String name, @NotNull JsonElement json) {
         this.name = name;
 
         Matcher matcher = CommandScript.pattern.matcher(name);
@@ -37,14 +38,29 @@ public final class CommandScript {
         trigger = Trigger.valueOf(matcher.group(1).toUpperCase());
         delay = matcher.group(2) != null ? Integer.parseInt(matcher.group(2)) : 0;
 
-        if (! (source instanceof JsonArray array)) {
+        if (! (json instanceof JsonArray array)) {
             throw new QuestSyntaxException("The script must defined in a string array.");
         }
 
-        this.source = array.asList().stream()
+        source = array.asList().stream()
                 .filter(elm -> elm.isJsonPrimitive() && elm.getAsJsonPrimitive().isString())
                 .map(JsonElement::getAsString)
                 .toList();
+    }
+
+    public CommandScript(@NotNull String name, @NotNull List<String> yaml) {
+        this.name = name;
+
+        Matcher matcher = CommandScript.pattern.matcher(name);
+
+        if (! matcher.matches()) {
+            throw new QuestSyntaxException("Invalid script header: " + name);
+        }
+
+        trigger = Trigger.valueOf(matcher.group(1).toUpperCase());
+        delay = matcher.group(2) != null ? Integer.parseInt(matcher.group(2)) : 0;
+
+        source = new ArrayList<>(yaml);
     }
 
     public @NotNull String getName() {

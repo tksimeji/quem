@@ -21,15 +21,18 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 public final class Quem extends JavaPlugin {
     private static Quem instance;
 
-    public static final @NotNull String extension = "json";
-
     public static final @NotNull SimpleDateFormat sdf1 = new SimpleDateFormat("MM/dd/yy");
 
     public static final @NotNull DecimalFormat df1 = new DecimalFormat("#.##");
+
+    public static final @NotNull List<String> JSON_EXTENSIONS = List.of("json");
+
+    public static final @NotNull List<String> YAML_EXTENSIONS = List.of("yaml", "yml");
 
     public static @NotNull Quem plugin() {
         return Quem.instance;

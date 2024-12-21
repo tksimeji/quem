@@ -2,7 +2,7 @@
 
 A quest-style game engine for Minecraft
 
-![Version](https://img.shields.io/badge/version-0.1.0-blue?style=flat-square)
+![Version](https://img.shields.io/badge/version-0.2.0-blue?style=flat-square)
 ![Licence](https://img.shields.io/badge/licence-MIT-red?style=flat-square)
 
 This plugin depends on [Visualkit](https://github.com/tksimeji/visualkit).
