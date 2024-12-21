@@ -1,10 +1,9 @@
-package com.tksimeji.quem.element;
+package com.tksimeji.quem.script;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.tksimeji.quem.DebugQuest;
 import com.tksimeji.quem.Quem;
-import com.tksimeji.quem.Quest;
 import com.tksimeji.quem.QuestSyntaxException;
 import com.tksimeji.quem.util.StringUtility;
 import org.bukkit.Bukkit;
@@ -75,33 +74,31 @@ public final class CommandScript {
         return delay;
     }
 
-    public void run(@NotNull Quest executor) {
+    public void run(@NotNull ScriptRuntime runtime) {
         Bukkit.getScheduler().runTaskLater(Quem.plugin(), () -> {
-            if (! source.stream().allMatch(command -> execute(executor, command))) {
-                throw new RuntimeException();
-            }
+            source.forEach(line -> execute(runtime, line));
 
-            if (executor instanceof DebugQuest debugger) {
+            if (runtime.getQuest() instanceof DebugQuest debugger) {
                 debugger.onScripting(this);
             }
         }, delay * 20L);
     }
 
-    private boolean execute(@NotNull Quest executor, @NotNull String command) {
+    private void execute(@NotNull ScriptRuntime runtime, @NotNull String command) {
         if (! command.startsWith("$ ")) {
-            command = "$ exec " + command;
+            command = "$ run " + command;
         }
 
-        String trimmedCommand = command.substring(1).trim();
-        String[] tokens = trimmedCommand.split("\\s+", 2);
-        String prefix = 1 <= tokens.length ? tokens[0] : StringUtility.empty();
+        command = command.substring(1).trim();
+        String[] tokens = command.split("\\s+", 2);
+
+        String syntax = 1 <= tokens.length ? tokens[0] : StringUtility.empty();
         String statement = tokens.length == 2 ? tokens[1] : StringUtility.empty();
 
-        return switch (prefix) {
-            case "exec" -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), statement);
-            case "foreach" -> executor.getPlayers().stream().allMatch(player -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), statement.replace("${player}", player.getName())));
-            default -> false;
-        };
+        ScriptRuntime.syntaxes.stream()
+                .filter(s -> s.name().equals(syntax))
+                .findFirst()
+                .ifPresent(s -> s.use(runtime, statement.split(" ")));
     }
 
     public enum Trigger {

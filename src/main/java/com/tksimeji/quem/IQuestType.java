@@ -1,7 +1,7 @@
 package com.tksimeji.quem;
 
 import com.tksimeji.quem.element.Category;
-import com.tksimeji.quem.element.CommandScript;
+import com.tksimeji.quem.script.CommandScript;
 import com.tksimeji.quem.element.Point;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Location;

@@ -1,6 +1,7 @@
 package com.tksimeji.quem.element;
 
 import com.google.gson.JsonObject;
+import com.tksimeji.quem.script.CommandScript;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.Nullable;
 

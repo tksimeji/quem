@@ -2,7 +2,7 @@
 
 A quest-style game engine for Minecraft
 
-![Version](https://img.shields.io/badge/version-0.2.1-blue?style=flat-square)
+![Version](https://img.shields.io/badge/version-0.3.0-blue?style=flat-square)
 ![Licence](https://img.shields.io/badge/licence-MIT-red?style=flat-square)
 
 This plugin depends on [Visualkit](https://github.com/tksimeji/visualkit).
@@ -32,8 +32,6 @@ Required arguments are represented by `<>` and optional arguments by `[]`.
 A file that defines a quest (type of quest) is called a quest file.
 
 These files are written in json (*.json) or yaml (*.yaml or *.yml) and can be placed anywhere under the `./plugins/quem` hierarchy.
-
-## Syntax
 
 ### Json
 
@@ -215,6 +213,7 @@ You can also use special syntax by starting the token with a "$" sign:
 ```json
 "@start": [
   "$ run command arg1 arg2",
-  "$ foreach tellraw ${player} \"Hello, ${player}!\""""
+  "$ declare var = Hello!",
+  "$ foreach player in players tellraw ${player} \"${var}\""""
 ]
 ```

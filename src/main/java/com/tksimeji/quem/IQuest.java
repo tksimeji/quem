@@ -1,6 +1,5 @@
 package com.tksimeji.quem;
 
-import com.tksimeji.quem.element.CommandScript;
 import org.jetbrains.annotations.NotNull;
 
 public interface IQuest {
@@ -15,8 +14,6 @@ public interface IQuest {
     void onIncomplete();
 
     void cancel();
-
-    void call(@NotNull CommandScript.Trigger trigger);
 
     void tick();
 

@@ -1,6 +1,6 @@
 package com.tksimeji.quem;
 
-import com.tksimeji.quem.element.CommandScript;
+import com.tksimeji.quem.script.CommandScript;
 import com.tksimeji.quem.ui.CLI;
 import com.tksimeji.visualkit.lang.Language;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -33,10 +33,5 @@ public final class DebugQuest extends Quest {
 
     public void onScripting(@NotNull CommandScript script) {
         debuggers.forEach(debugger -> debugger.sendMessage(CLI.warn.append(Language.translate("message.debug.script", debugger, "script=" + script.getName()).color(NamedTextColor.YELLOW))));
-    }
-
-    @Override
-    public void call(CommandScript.@NotNull Trigger trigger) {
-        super.call(trigger);
     }
 }

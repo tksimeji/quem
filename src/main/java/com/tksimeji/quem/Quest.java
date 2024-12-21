@@ -1,7 +1,8 @@
 package com.tksimeji.quem;
 
-import com.tksimeji.quem.element.CommandScript;
+import com.tksimeji.quem.script.CommandScript;
 import com.tksimeji.quem.element.Point;
+import com.tksimeji.quem.script.ScriptRuntime;
 import com.tksimeji.quem.ui.CLI;
 import com.tksimeji.quem.ui.QuestPanel;
 import com.tksimeji.quem.util.ComponentUtility;
@@ -33,13 +34,15 @@ public class Quest implements IQuest {
         return new HashSet<>(instances);
     }
 
-    private final QuestType type;
-    private final Party party;
-    private final QuestPanel panel;
+    protected final QuestType type;
+    protected final QuestPanel panel;
 
-    private final Map<Player, Location> bases = new HashMap<>();
+    protected final Party party;
+    protected final ScriptRuntime runtime;
 
-    private int phase;
+    protected final Map<Player, Location> bases = new HashMap<>();
+
+    protected int phase;
 
     public Quest(@NotNull QuestType type, @NotNull Party party) {
         this.type = type;
@@ -47,6 +50,7 @@ public class Quest implements IQuest {
 
         party.setQuest(this);
         panel = new QuestPanel(this);
+        runtime = new ScriptRuntime(this);
 
         party.forEach(player -> {
             player.sendMessage(Component.text(CLI.SEPARATOR).color(NamedTextColor.GREEN));
@@ -65,7 +69,7 @@ public class Quest implements IQuest {
             player.teleport(type.getLocation());
         });
 
-        call(CommandScript.Trigger.START);
+        runtime.call(CommandScript.Trigger.START);
 
         instances.add(this);
     }
@@ -74,12 +78,16 @@ public class Quest implements IQuest {
         return type;
     }
 
+    public @NotNull QuestPanel getPanel() {
+        return panel;
+    }
+
     public @NotNull Party getParty() {
         return party;
     }
 
-    public @NotNull QuestPanel getPanel() {
-        return panel;
+    public @NotNull ScriptRuntime getRuntime() {
+        return runtime;
     }
 
     public @NotNull List<Player> getPlayers() {
@@ -94,7 +102,7 @@ public class Quest implements IQuest {
     @Override
     public void setPhase(int phase) {
         if (this.phase < phase) {
-            call(CommandScript.Trigger.PROGRESS);
+            runtime.call(CommandScript.Trigger.PROGRESS);
         }
 
         this.phase = phase;
@@ -110,7 +118,7 @@ public class Quest implements IQuest {
             return;
         }
 
-        call(CommandScript.Trigger.END);
+        runtime.call(CommandScript.Trigger.END);
 
         if (reason == EndReason.COMPLETE) {
             onComplete();
@@ -134,12 +142,12 @@ public class Quest implements IQuest {
 
     @Override
     public void onComplete() {
-        call(CommandScript.Trigger.COMPLETE);
+        runtime.call(CommandScript.Trigger.COMPLETE);
     }
 
     @Override
     public void onIncomplete() {
-        call(CommandScript.Trigger.INCOMPLETE);
+        runtime.call(CommandScript.Trigger.INCOMPLETE);
     }
 
     @Override
@@ -149,14 +157,15 @@ public class Quest implements IQuest {
     }
 
     @Override
-    public void call(@NotNull CommandScript.Trigger trigger) {
-        type.getScripts().stream()
-                .filter(script -> script.getTrigger() == trigger)
-                .forEach(script -> script.run(this));
-    }
-
-    @Override
     public void tick() {
+        StringBuilder b = new StringBuilder("[");
+
+        getPlayers().forEach(player -> b.append(player.getName()).append(","));
+
+        b.append("]");
+
+        runtime.setVariable("players", b.toString());
+
         for (Player player : getPlayers()) {
             if (player.getInventory().getHeldItemSlot() == 8) {
                 navigate(player);
