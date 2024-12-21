@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public final class CommandScript {
-    private static final @NotNull Pattern pattern = Pattern.compile("@(" + Arrays.stream(Trigger.values()).map(Enum::name).map(String::toLowerCase).collect(Collectors.joining("|")) + ")(?:\\+(\\d)+s)?");
+    private static final @NotNull Pattern pattern = Pattern.compile("(" + Arrays.stream(Trigger.values()).map(Enum::name).map(String::toLowerCase).collect(Collectors.joining("|")) + ")(?:\\+(\\d)+s)?");
 
     private final @NotNull String name;
     private final @NotNull Trigger trigger;
