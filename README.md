@@ -2,7 +2,7 @@
 
 A quest-style game engine for Minecraft
 
-![Version](https://img.shields.io/badge/version-0.2.0-blue?style=flat-square)
+![Version](https://img.shields.io/badge/version-0.2.1-blue?style=flat-square)
 ![Licence](https://img.shields.io/badge/licence-MIT-red?style=flat-square)
 
 This plugin depends on [Visualkit](https://github.com/tksimeji/visualkit).
@@ -27,71 +27,182 @@ Required arguments are represented by `<>` and optional arguments by `[]`.
 
 `/quem unload <type>`: Unload any quest type.
 
-# Quest definition
+# Quest File
 
-Quests are loaded by placing a json format definition file in `/plugins/quem`.
+A file that defines a quest (type of quest) is called a quest file.
 
-> [!TIPS]
-> You can also create directories in `/plugins/quem` to organize your definition files.
+These files are written in json (*.json) or yaml (*.yaml or *.yml) and can be placed anywhere under the `./plugins/quem` hierarchy.
 
 ## Syntax
 
-Here we use "//" to annotate, which cannot be used in real json.
+### Json
+
+The root element is an object.
+
+```json
+{}
+```
+
+Specifies the title of the quest. You can use decorations using the `&` symbol.
 
 ```json
 {
-  "title": "&aZombie Hunter",
+  "title": "&aExample Quest"
+}
+```
+
+Specifies the description of the quest.
+Of course, you can also use the text decoration.
+
+```json
+{
   "description": [
-    "&7Simple job of killing zombies."
-  ],
+    "&7This is a sample."
+  ]
+}
+```
+
+Next is the quest icon.
+There are two ways to specify this.
+
+Simply specify from the item:
+
+```json
+{
+  "icon": "minecraft:paper"
+}
+```
+
+To specify custom model data or the presence or absence of auras:
+
+```json
+{
   "icon": {
-    // You could also simply write: "icon": "minecraft:rotten_flesh
-    "type": "minecraft:rotten_flesh",
-    "model": 1, // You can specify custom model data
-    "aura": true // You can specify whether to have an enchantment aura.
-  },
-  "requirement": 3, // Progression required to complete the quest
-  "category": "general", // You can choose from general, story, daily, and event
+    "type": "minecraft:paper",
+    "model": 1,
+    "aura": true
+  }
+}
+```
+
+This is the progress needed to complete the quest.
+
+```json
+{
+  "requirement": 8
+}
+```
+
+This is the category of the quest.
+It can be one of "general", "story", "daily" or "event".
+
+```json
+{
+  "category": "general"
+}
+```
+
+This is the starting point of the quest.
+(Yaw and pitch are optional)
+
+```json
+{
   "location": {
-    // Starting point of the quest
     "world": "minecraft:overworld",
     "x": 0,
     "y": 0,
     "z": 0,
-    "yaw": 0, // Note: This is an arbitrary value
-    "pitch": 0 // Note: This is an arbitrary value
-  },
+    "yaw": 0,
+    "pitch": 0
+  }
+}
+```
+
+You can also specify waypoints for your quest. (This is optional)
+Navigation will be based on these.
+
+The method for specifying the position is the same as for `location`.
+
+```json
+{
   "points": [
-    // Note: This is an arbitrary value
-    // Quest Checkpoints
     {
       "world": "minecraft:overworld",
       "x": 0,
       "y": 0,
       "z": 0
     }
-  ],
+  ]
+}
+```
+
+Finally, the script. (This is optional)
+
+We will cover how to actually write a script in a later chapter.
+
+```json
+{
   "scripts": {
-    // Note: This is an arbitrary value
-    "@start+1s": [],
-    "@end": [],
-    "@complete": [],
-    "@incomplete": [],
-    "@progress": []
+    "start+2s": [
+      "$foreach tellraw ${player} \"Hello, ${player}!\""
+    ]
   }
 }
 ```
 
+### Yaml
+
+The basics remain the same when writing in Yaml.
+
+So here I'll just give you the big picture.
+
+```yaml
+title: "&aExample Quest"
+description:
+  - "This is a sample."
+icon:
+  type: "minecraft:paper"
+  model: 1
+  aura: true
+requirement: 8
+category: "general"
+location:
+  world: "minecraft:overworld"
+  x: 0
+  y: 0
+  z: 0
+  yaw: 0
+  pitch: 0
+points:
+  - world: "minecraft:overworld"
+    x: 0
+    y: 0
+    z: 0
+scripts:
+  start+2s:
+    - "$ foreach tellraw ${player} \"Hello, ${player}!\""
+```
+
 ## Scripting
 
-A script in Quem is a command that is executed in response to a trigger that occurs in a quest.
-You can write a script by adding the scripts property to the definition file.
+Scripts perform actions based on triggers that occur during quests.
 
 The script must be named as follows:
 
-```@{trigger}``` or ```@{trigger}+{delay}s```
+```{trigger}``` or ```{trigger}+{delay}s```
 
-You can write Minecraft commands directly.
+There are the following types of triggers:
+
+| Name       | When called                                   |
+|:-----------|:----------------------------------------------|
+| start      | At the start of the quest                     |
+| end        | When a quest ends, regardless of how it ended |
+| complete   | When a quest is completed                     |
+| incomplete | When a quest is not completed                 |
+
+The script code is represented as a string array.
+
+You can write Minecraft commands directly:
 
 ```json
 "@start": [
@@ -99,11 +210,11 @@ You can write Minecraft commands directly.
 ]
 ```
 
-You can use Quem's own syntax by starting with the "$" sign.
+You can also use special syntax by starting the token with a "$" sign:
 
 ```json
 "@start": [
-  "$ run command arg1 arg2", // If you omit the $, it will be interpreted internally as.
+  "$ run command arg1 arg2",
   "$ foreach tellraw ${player} \"Hello, ${player}!\""""
 ]
 ```
