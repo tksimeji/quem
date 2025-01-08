@@ -20,7 +20,8 @@ public final class PartyMenuUI extends PartyUI {
     @Element(49)
     private final VisualkitElement exit = VisualkitElement.create(Material.BARRIER)
             .title(Language.translate("ui.close", player).color(NamedTextColor.RED))
-            .lore(Language.translate("ui.close.description", player).color(NamedTextColor.GRAY));
+            .lore(Language.translate("ui.close.description", player).color(NamedTextColor.GRAY))
+            .handler(this::close);
 
     private int invite = -1;
 
@@ -82,12 +83,7 @@ public final class PartyMenuUI extends PartyUI {
         }
     }
 
-    @Handler(slot = 49)
-    public void onExit() {
-        close();
-    }
-
-    @Handler(slot = 50)
+    @Handler(index = 50)
     public void onLeave() {
         new ConfirmUI(player, new BukkitRunnable() {
             @Override
@@ -103,7 +99,7 @@ public final class PartyMenuUI extends PartyUI {
         }, null);
     }
 
-    @Handler(asm = {@Asm(from = 11, to = 15), @Asm(from = 20, to = 24), @Asm(from = 29, to = 33)}, click = Click.SHIFT, mouse = Mouse.LEFT)
+    @Handler(asm = {@Asm(from = 11, to = 15), @Asm(from = 20, to = 24), @Asm(from = 29, to = 33)}, action = Action.SHIFT_CLICK, mouse = Mouse.LEFT)
     public void onKick(int slot) {
         if (player != party.getLeader()) {
             return;
@@ -118,7 +114,7 @@ public final class PartyMenuUI extends PartyUI {
         party.removeMember(member);
     }
 
-    @Handler(asm = {@Asm(from = 11, to = 15), @Asm(from = 20, to = 24), @Asm(from = 29, to = 33)}, click = Click.SHIFT, mouse = Mouse.LEFT)
+    @Handler(asm = {@Asm(from = 11, to = 15), @Asm(from = 20, to = 24), @Asm(from = 29, to = 33)}, action = Action.SHIFT_CLICK, mouse = Mouse.LEFT)
     public void onTransfer(int slot) {
         if (player != party.getLeader()) {
             return;

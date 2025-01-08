@@ -31,7 +31,8 @@ public final class QuestControllerUI extends ChestUI {
     @Element(15)
     private final VisualkitElement exit = VisualkitElement.create(Material.ARROW)
             .title(Language.translate("ui.close", player).color(NamedTextColor.GREEN))
-            .lore(Language.translate("ui.close.description", player).color(NamedTextColor.GRAY));
+            .lore(Language.translate("ui.close.description", player).color(NamedTextColor.GRAY))
+            .handler(this::close);
 
     public QuestControllerUI(@NotNull Player player) {
         super(player);
@@ -55,7 +56,7 @@ public final class QuestControllerUI extends ChestUI {
         return Size.SIZE_27;
     }
 
-    @Handler(slot = 13)
+    @Handler(index = 13)
     public void onLeave() {
         new ConfirmUI(player, new BukkitRunnable() {
             @Override
@@ -69,10 +70,5 @@ public final class QuestControllerUI extends ChestUI {
                 }
             }
         }, null);
-    }
-
-    @Handler(slot = 15)
-    public void onExit() {
-        close();
     }
 }
