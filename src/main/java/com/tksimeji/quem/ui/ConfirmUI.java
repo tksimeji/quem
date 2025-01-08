@@ -45,7 +45,7 @@ public final class ConfirmUI extends ChestUI {
         return Size.SIZE_27;
     }
 
-    @Handler(slot = 11, mouse = Mouse.LEFT)
+    @Handler(index = 11, mouse = Mouse.LEFT)
     public void onAccept() {
         if (acceptRunnable == null) {
             return;
@@ -54,7 +54,7 @@ public final class ConfirmUI extends ChestUI {
         acceptRunnable.run();
     }
 
-    @Handler(slot = 15, mouse = Mouse.LEFT)
+    @Handler(index = 15, mouse = Mouse.LEFT)
     public void onReject() {
         if (rejectRunnable == null) {
             return;
@@ -63,7 +63,7 @@ public final class ConfirmUI extends ChestUI {
         rejectRunnable.run();
     }
 
-    @Handler(slot = {11, 15})
+    @Handler(index = {11, 15})
     public void onInteract() {
         close();
     }

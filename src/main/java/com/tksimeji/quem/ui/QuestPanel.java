@@ -1,5 +1,6 @@
 package com.tksimeji.quem.ui;
 
+import com.tksimeji.quem.IQuestType;
 import com.tksimeji.visualkit.SharedPanelUI;
 import com.tksimeji.quem.Quem;
 import com.tksimeji.quem.Quest;
@@ -16,7 +17,8 @@ import java.util.List;
 public final class QuestPanel extends SharedPanelUI {
     private final Quest quest;
 
-    private int requirement;
+    private final int requirement;
+
     private int phase;
     private int members;
 
@@ -25,8 +27,8 @@ public final class QuestPanel extends SharedPanelUI {
     public QuestPanel(@NotNull Quest quest) {
         this.quest = quest;
 
-        requirement = quest.getType().getRequirement();
-        phase = quest.getPhase();
+        requirement = quest.getType().getRequirements().stream().mapToInt(IQuestType.Requirement::amount).sum();
+        phase = 0;
         members = quest.getPlayers().size();
         players = quest.getPlayers();
 
@@ -47,8 +49,7 @@ public final class QuestPanel extends SharedPanelUI {
 
     @Override
     public void onTick() {
-        phase = quest.getPhase();
-        requirement = quest.getType().getRequirement();
+        phase = quest.getType().getRequirements().stream().mapToInt(quest::getPhase).sum();
         members = quest.getPlayers().size();
 
         for (int i = 0; i < players.size(); i++) {

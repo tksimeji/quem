@@ -8,8 +8,10 @@ import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Set;
 
 public interface IQuestType {
     @NotNull String getName();
@@ -30,9 +32,13 @@ public interface IQuestType {
 
     @NotNull List<CommandScript> getScripts();
 
-    int getRequirement();
+    @Nullable Requirement getRequirement(@Nullable String name);
+
+    @NotNull Set<Requirement> getRequirements();
 
     int getPlayLimit();
 
     int getPlayerLimit();
+
+    public record Requirement(@NotNull String name, int amount) { }
 }

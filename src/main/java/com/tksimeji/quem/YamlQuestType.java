@@ -30,8 +30,9 @@ public final class YamlQuestType extends QuestType {
                         .orElseThrow(() -> new QuestSyntaxException("Object type property \"location\" must be specified."))),
                 new Points(ResourceUtility.getYamlResource(file).getConfigurationSection("points")),
                 new Scripts(ResourceUtility.getYamlResource(file).getConfigurationSection("scripts")),
-                ResourceUtility.getYamlResource(file).isInt("requirement") ? ResourceUtility.getYamlResource(file).getInt("requirement") : exception("Numeric type property \"requirement\" must be specified.", Integer.class),
                 ResourceUtility.getYamlResource(file).isInt("play_limit") ? ResourceUtility.getYamlResource(file).getInt("play_limit") : -1,
-                ResourceUtility.getYamlResource(file).isInt("player_limit") ? ResourceUtility.getYamlResource(file).getInt("player_limit") : -1);
+                ResourceUtility.getYamlResource(file).isInt("player_limit") ? ResourceUtility.getYamlResource(file).getInt("player_limit") : -1,
+                new Requirements(Optional.ofNullable(ResourceUtility.getYamlResource(file).getConfigurationSection("requirements"))
+                        .orElseThrow(() -> new QuestSyntaxException("Object type property \"requirements\" must be specified."))));
     }
 }

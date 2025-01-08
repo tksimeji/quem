@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "net.azisaba"
-version = "0.3.0"
+version = "0.4.0"
 
 repositories {
     mavenCentral()
@@ -19,7 +19,7 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
-    compileOnly("com.tksimeji:visualkit:0.3.8")
+    compileOnly("com.tksimeji:visualkit:0.5.1")
 }
 
 val targetJavaVersion = 21

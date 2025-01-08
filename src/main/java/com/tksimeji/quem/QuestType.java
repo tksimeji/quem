@@ -40,8 +40,8 @@ public abstract class QuestType implements IQuestType {
 
     protected final @NotNull Points points;
     protected final @NotNull Scripts scripts;
+    protected final @NotNull Requirements requirements;
 
-    protected final int requirement;
     protected final int playLimit;
     protected final int playerLimit;
 
@@ -50,7 +50,7 @@ public abstract class QuestType implements IQuestType {
     private final @NotNull File file;
 
     public QuestType(@NotNull File f, @NotNull NamespacedKey k, @NotNull Component c, @NotNull Description d, @NotNull QuestIcon i, @NotNull Category c2,
-                     @NotNull Location l, @NotNull Points p, @NotNull Scripts s, int r, int pl, int pl2) {
+                     @NotNull Location l, @NotNull Points p, @NotNull Scripts s, int pl, int pl2, @NotNull Requirements r) {
         if (getInstance(k.getKey()) != null) {
             throw new IllegalStateException("Identifier \"" + k.getKey() + "\" is already in use.");
         }
@@ -63,7 +63,7 @@ public abstract class QuestType implements IQuestType {
         location = l;
         points = p;
         scripts = s;
-        requirement = r;
+        requirements = r;
         playLimit = pl;
         playerLimit = pl2;
         file = f;
@@ -121,8 +121,13 @@ public abstract class QuestType implements IQuestType {
     }
 
     @Override
-    public int getRequirement() {
-        return requirement;
+    public @Nullable Requirement getRequirement(@NotNull String name) {
+        return requirements.stream().filter(requirement -> requirement.name().equals(name)).findFirst().orElse(null);
+    }
+
+    @Override
+    public @NotNull Set<Requirement> getRequirements() {
+        return new HashSet<>(requirements);
     }
 
     @Override

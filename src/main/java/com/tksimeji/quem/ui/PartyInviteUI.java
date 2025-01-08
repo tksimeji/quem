@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 public final class PartyInviteUI extends PartyUI {
-    private static final int[] slots = new int[]{10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34};
+    private static final int[] slots = {10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34};
 
     @Element(45)
     private final VisualkitElement previous = VisualkitElement.create(Material.ARROW)
@@ -64,17 +64,17 @@ public final class PartyInviteUI extends PartyUI {
         }
     }
 
-    @Handler(slot = 45)
+    @Handler(index = 45)
     public void onBack() {
         new PartyInviteUI(player, Math.max(page - 1, 0));
     }
 
-    @Handler(slot = 49)
+    @Handler(index = 49)
     public void onReturn() {
         new PartyMenuUI(player);
     }
 
-    @Handler(slot = 53)
+    @Handler(index = 53)
     public void onNext() {
         new PartyInviteUI(player, Math.min(page + 1, players.size() / slots.length));
     }

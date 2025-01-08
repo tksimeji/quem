@@ -58,9 +58,10 @@
   "command.list.invalid": "${page} is an invalid page specification.",
   "command.list.loads": "${count} quests have been loaded.",
   "command.load.complete": "Successfully loaded ${file}.",
-  "command.phase.complete": "Changed quest phase to ${phase}.",
+  "command.phase.complete": "Progress of ${requirement} changed to ${phase}.",
   "command.phase.invalid_formula": "${formula} is an invalid expression.",
-  "command.phase.not_found": "Could not identify the quest from the arguments.",
+  "command.phase.quest_not_found": "Could not identify the quest from the arguments.",
+  "command.phase.requirement_not_found": "${requirement} is an unknown requirement.",
   "command.quem.unknown": "${command} is an unknown subcommand.",
   "command.reload.complete": "Reload completed in ${seconds} seconds.",
   "command.reload.not_found": "${type} is an unknown quest type.",
@@ -75,7 +76,7 @@
   
   "message.debug.announce": "Warning: This quest is running in debug mode.",
   "message.debug.end": "The quest ended due to ${reason}.",
-  "message.debug.phase": "The quest progress has been changed from ${from} to ${to}.",
+  "message.debug.phase": "Progress of ${requirement} changed from ${from} to ${to}.",
   "message.debug.script": "Executed script ${script}.",
 
   "message.party.disbanded": "The party has been disbanded.",

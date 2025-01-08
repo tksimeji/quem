@@ -35,7 +35,8 @@ public final class QuestUI extends ChestUI {
     @Element(49)
     private final VisualkitElement exit = VisualkitElement.create(Material.BARRIER)
             .title(Language.translate("ui.close", player).color(NamedTextColor.RED))
-            .lore(Language.translate("ui.close.description", player).color(NamedTextColor.GRAY));
+            .lore(Language.translate("ui.close.description", player).color(NamedTextColor.GRAY))
+            .handler(this::close);
 
     @Element(50)
     private final VisualkitElement filter = VisualkitElement.create(Material.HOPPER)
@@ -106,17 +107,12 @@ public final class QuestUI extends ChestUI {
         return Size.SIZE_54;
     }
 
-    @Handler(slot = 45)
+    @Handler(index = 45)
     public void onBack() {
         new QuestUI(player, query, category, Math.max(page - 1, 0));
     }
 
-    @Handler(slot = 49)
-    public void onExit() {
-        close();
-    }
-
-    @Handler(slot = 50)
+    @Handler(index = 50)
     public void onFilter(@NotNull Mouse mouse) {
         player.playSound(player, Sound.UI_BUTTON_CLICK, 1.0f, 1.4f);
 
@@ -143,7 +139,7 @@ public final class QuestUI extends ChestUI {
         new QuestUI(player, query, category);
     }
 
-    @Handler(slot = 53)
+    @Handler(index = 53)
     public void onNext() {
         new QuestUI(player, query, category, Math.min(page + 1, quests.size() / QuestUI.slots.length));
     }

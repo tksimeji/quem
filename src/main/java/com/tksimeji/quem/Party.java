@@ -109,11 +109,11 @@ public final class Party implements Iterable<Player> {
     }
 
     private void applyToUI() {
-        Visualkit.sessions().stream()
+        Visualkit.getSessions().stream()
                 .filter(ui -> ui instanceof PartyCreateUI ui2 && isMember(ui2.getPlayer()))
                 .forEach(ui -> new PartyMenuUI(((PartyCreateUI) ui).getPlayer()));
 
-        Visualkit.sessions().stream()
+        Visualkit.getSessions().stream()
                 .filter(ui -> ui instanceof PartyMenuUI ui2 && ui2.party() == this)
                 .forEach(ui -> {
                     if (isMember(((PartyMenuUI) ui).getPlayer())) {
@@ -123,7 +123,7 @@ public final class Party implements Iterable<Player> {
                     }
                 });
 
-        Visualkit.sessions().stream()
+        Visualkit.getSessions().stream()
                 .filter(ui -> ui instanceof PartyInviteUI ui2 && ui2.party() == this)
                 .forEach(ui -> {
                     if (isMember(((PartyInviteUI) ui).getPlayer())) {
@@ -152,7 +152,7 @@ public final class Party implements Iterable<Player> {
 
         getMembers().forEach(this::removeMember);
 
-        Visualkit.sessions().stream()
+        Visualkit.getSessions().stream()
                 .filter(ui -> ui instanceof PartyUI ui2 && ui2.party() == this)
                 .forEach(ui -> ((PartyUI) ui).close());
 

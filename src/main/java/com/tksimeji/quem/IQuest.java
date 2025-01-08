@@ -3,9 +3,9 @@ package com.tksimeji.quem;
 import org.jetbrains.annotations.NotNull;
 
 public interface IQuest {
-    int getPhase();
+    int getPhase(@NotNull IQuestType.Requirement requirement);
 
-    void setPhase(int phase);
+    void setPhase(@NotNull IQuestType.Requirement requirement, int phase);
 
     void onEnd(@NotNull EndReason reason);
 
