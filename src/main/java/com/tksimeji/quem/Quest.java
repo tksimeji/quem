@@ -34,15 +34,15 @@ public class Quest implements IQuest {
         return new HashSet<>(instances);
     }
 
-    protected final QuestType type;
-    protected final QuestPanel panel;
+    protected final @NotNull QuestType type;
+    protected final @NotNull QuestPanel panel;
 
-    protected final Party party;
-    protected final ScriptRuntime runtime;
+    protected final @NotNull Party party;
+    protected final @NotNull ScriptRuntime runtime;
 
-    protected final Map<Player, Location> bases = new HashMap<>();
+    protected final @NotNull Map<Player, Location> bases = new HashMap<>();
 
-    protected int phase;
+    protected final @NotNull Map<IQuestType.Requirement, Integer> phase = new HashMap<>();
 
     public Quest(@NotNull QuestType type, @NotNull Party party) {
         this.type = type;
@@ -68,6 +68,8 @@ public class Quest implements IQuest {
             bases.put(player, player.getLocation());
             player.teleport(type.getLocation());
         });
+
+        type.getRequirements().forEach(requirement -> phase.put(requirement, 0));
 
         runtime.call(CommandScript.Trigger.START);
 
@@ -95,19 +97,19 @@ public class Quest implements IQuest {
     }
 
     @Override
-    public int getPhase() {
-        return phase;
+    public int getPhase(@Nullable IQuestType.Requirement requirement) {
+        return phase.getOrDefault(requirement, -1);
     }
 
     @Override
-    public void setPhase(int phase) {
-        if (this.phase < phase) {
+    public void setPhase(@NotNull IQuestType.Requirement requirement, int phase) {
+        if (getPhase(requirement) < phase) {
             runtime.call(CommandScript.Trigger.PROGRESS);
         }
 
-        this.phase = phase;
+        this.phase.put(requirement, phase);
 
-        if (type.getRequirement() <= phase) {
+        if (this.phase.entrySet().stream().allMatch(entry -> entry.getKey().amount() <= entry.getValue())) {
             onEnd(EndReason.COMPLETE);
         }
     }
@@ -192,7 +194,10 @@ public class Quest implements IQuest {
                 Location departure = player.getLocation();
 
                 Point destination = Quest.this.type.getPoints().stream()
-                        .filter(p -> p.requirement() == Quest.this.phase)
+                        .filter(p -> p.getRequirements()
+                                .entrySet()
+                                .stream()
+                                .allMatch(requirement -> requirement.getValue() == Quest.this.getPhase(Quest.this.getType().getRequirement(requirement.getKey()))))
                         .findFirst()
                         .orElse(null);
 

@@ -40,10 +40,6 @@ public final class JsonQuestType extends QuestType {
                         .filter(JsonElement::isJsonObject)
                         .map(JsonElement::getAsJsonObject)
                         .orElse(null)),
-                Optional.ofNullable(ResourceUtility.getJsonResource(file).getAsJsonObject().get("requirement"))
-                        .filter(elm -> elm.isJsonPrimitive() && elm.getAsJsonPrimitive().isNumber())
-                        .orElseThrow(() -> new QuestSyntaxException("Numeric type property \"requirement\" must be specified."))
-                        .getAsInt(),
                 Optional.ofNullable(ResourceUtility.getJsonResource(file).getAsJsonObject().get("play_limit"))
                         .filter(elm -> elm.isJsonPrimitive() && elm.getAsJsonPrimitive().isNumber())
                         .orElse(new JsonPrimitive(-1))
@@ -51,6 +47,9 @@ public final class JsonQuestType extends QuestType {
                 Optional.ofNullable(ResourceUtility.getJsonResource(file).getAsJsonObject().get("player_limit"))
                         .filter(elm -> elm.isJsonPrimitive() && elm.getAsJsonPrimitive().isNumber())
                         .orElse(new JsonPrimitive(-1))
-                        .getAsInt());
+                        .getAsInt(),
+                new Requirements(Optional.ofNullable(ResourceUtility.getJsonResource(file).getAsJsonObject().get("requirements"))
+                        .orElseThrow(() -> new QuestSyntaxException("Object type property \"requirements\" must be specified."))
+                        .getAsJsonObject()));
     }
 }

@@ -58,9 +58,10 @@
   "command.list.invalid": "${page}は無効なページ指定です",
   "command.list.loads": "${count}件のクエストがロードされています",
   "command.load.complete": "${file}のロードに成功しました",
-  "command.phase.complete": "クエストのフェーズを ${phase} に変更しました",
+  "command.phase.complete": "${requirement} の進行度を ${phase} に変更しました",
   "command.phase.invalid_formula": "${formula} は無効な式です",
-  "command.phase.not_found": "引数からクエストを特定できませんでした",
+  "command.phase.quest_not_found": "引数からクエストを特定できませんでした",
+  "command.phase.requirement_not_found": "${requirement} は不明な要件です",
   "command.quem.unknown": "${command} は不明なサブコマンドです",
   "command.reload.complete": "${seconds}秒でリロードを完了しました。",
   "command.reload.not_found": "${type} は不明なクエストタイプです",
@@ -75,7 +76,7 @@
 
   "message.debug.announce": "警告：このクエストはデバッグモードで実行されています",
   "message.debug.end": "クエストは ${reason} で終了しました",
-  "message.debug.phase": "クエストの進行度が ${from} から ${to} に変更されました",
+  "message.debug.phase": "${requirement} の進行度が ${from} から ${to} に変更されました",
   "message.debug.script": "スクリプト ${script} を実行しました",
 
   "message.party.disbanded": "パーティーは解散されました",

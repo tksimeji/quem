@@ -19,10 +19,10 @@ public final class DebugQuest extends Quest {
     }
 
     @Override
-    public void setPhase(int phase) {
-        int old = this.getPhase();
-        super.setPhase(phase);
-        debuggers.forEach(debugger -> debugger.sendMessage(CLI.warn.append(Language.translate("message.debug.phase", debugger, "from=" + old, "to=" + phase).color(NamedTextColor.YELLOW))));
+    public void setPhase(@NotNull IQuestType.Requirement requirement, int phase) {
+        int old = this.getPhase(requirement);
+        super.setPhase(requirement, phase);
+        debuggers.forEach(debugger -> debugger.sendMessage(CLI.warn.append(Language.translate("message.debug.phase", debugger, "requirement=" + requirement.name(), "from=" + old, "to=" + phase).color(NamedTextColor.YELLOW))));
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.tksimeji.quem.command;
 
+import com.tksimeji.quem.IQuestType;
 import com.tksimeji.quem.Quest;
+import com.tksimeji.quem.QuestType;
 import com.tksimeji.quem.ui.CLI;
 import com.tksimeji.quem.util.StringUtility;
 import com.tksimeji.visualkit.lang.Language;
@@ -26,9 +28,15 @@ public final class PhaseSubcommand implements Subcommand {
         if (args.length == 1) {
             return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
         } else if (args.length == 2) {
-          return operators.chars()
-                  .mapToObj(c -> String.valueOf((char) c))
-                  .toList();
+            Quest quest = Quest.getInstance(Bukkit.getPlayer(args[1]));
+
+            if (quest != null) {
+                return quest.getType().getRequirements().stream().map(IQuestType.Requirement::name).toList();
+            }
+        } else if (args.length == 3) {
+            return operators.chars()
+                    .mapToObj(c -> String.valueOf((char) c))
+                    .toList();
         }
 
         return List.of();
@@ -36,41 +44,51 @@ public final class PhaseSubcommand implements Subcommand {
 
     @Override
     public void execute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (args.length != 2) {
+        if (args.length != 3) {
             sender.sendMessage(CLI.warn.append(Language.translate("command.usage", sender)
-                    .append(Component.text(String.format(": /%s %s <player> <phase>", label, name())))));
+                    .append(Component.text(String.format(": /%s %s <player> <requirement> <phase>", label, name())))));
             return;
         }
 
         Quest quest = Quest.getInstance(Bukkit.getPlayer(args[0]));
 
         if (quest == null) {
-            sender.sendMessage(CLI.failed.append(Language.translate("command.phase.not_found", sender)));
+            sender.sendMessage(CLI.failed.append(Language.translate("command.phase.quest_not_found", sender)));
             return;
         }
 
-        boolean formula = operators.contains(String.valueOf(args[1].charAt(0)));
-        char operator = formula ? args[1].charAt(0) : '=';
+        IQuestType.Requirement requirement = quest.getType().getRequirements().stream()
+                .filter(r -> r.name().equals(args[1]))
+                .findFirst()
+                .orElse(null);
 
-        if (! operators.contains(String.valueOf(operator)) || ! StringUtility.isInteger(formula ? args[1].substring(1) : args[1])) {
-            sender.sendMessage(CLI.failed.append(Language.translate("command.phase.invalid_formula", sender, "formula=" + args[1])));
+        if (requirement == null) {
+            sender.sendMessage(CLI.failed.append(Language.translate("command.phase.requirement_not_found", sender, "requirement=" + args[1])));
             return;
         }
 
-        int i = Integer.parseInt(args[1].substring(1));
+        boolean formula = operators.contains(String.valueOf(args[2].charAt(0)));
+        char operator = formula ? args[2].charAt(0) : '=';
+
+        if (! operators.contains(String.valueOf(operator)) || ! StringUtility.isInteger(formula ? args[2].substring(1) : args[2])) {
+            sender.sendMessage(CLI.failed.append(Language.translate("command.phase.invalid_formula", sender, "formula=" + args[2])));
+            return;
+        }
+
+        int i = Integer.parseInt(args[2].substring(1));
 
         int phase = switch (operator) {
-            case '+' -> quest.getPhase() + i;
-            case '-' -> quest.getPhase() - i;
-            case '*' -> quest.getPhase() * i;
-            case '/' -> quest.getPhase() / Math.max(i, 1);
-            case '%' -> quest.getPhase() % i;
+            case '+' -> quest.getPhase(requirement) + i;
+            case '-' -> quest.getPhase(requirement) - i;
+            case '*' -> quest.getPhase(requirement) * i;
+            case '/' -> quest.getPhase(requirement) / Math.max(i, 1);
+            case '%' -> quest.getPhase(requirement) % i;
             case '=' -> i;
             default -> throw new IllegalStateException("Unexpected value: " + operator);
         };
 
-        quest.setPhase(phase);
+        quest.setPhase(requirement, phase);
 
-        sender.sendMessage(CLI.successful.append(Language.translate("command.phase.complete", sender, "phase=" + phase)));
+        sender.sendMessage(CLI.successful.append(Language.translate("command.phase.complete", sender, "requirement=" + requirement.name(), "phase=" + phase)));
     }
 }
